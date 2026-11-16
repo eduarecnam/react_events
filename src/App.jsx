@@ -1,32 +1,38 @@
 const App = () => {
-  const handleParentClick = () => console.log("Parent clicked!");
-  const handleChildClick = (e) => {
-    e.stopPropagation();
-    console.log("Child clicked!");
+  const handleLinkClick = (event) => {
+    event.preventDefault();
+    console.log("Link click prevented!");
+  };
+
+  const handleFormSubmission = (event) => {
+    event.preventDefault();
+    console.log("Form submission prevented!");
+    const formData = new FormData(event.target);
+    const name = formData.get("message");
+    console.log("submitted Data:", { name });
   };
   
   return (
-    <div
-      onClick={handleParentClick}
-      style={{
-        padding: "30px",
-        background: "lightgreen",
-        textAlign: "center",
-      }}
-    >
+    <div>
+       <a 
+          href="https://example.com"
+          onClick={handleLinkClick}  
+        > 
+          Link 
+        </a>
 
-      Parent
-      <div
-        onClick={handleChildClick}
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          background: "lightblue",
-          textAlign: "center",
-        }}
-      >   
-        Child
-      </div>
+        <form
+          style={{ display: "flex", gap: "10px", marginTop: "20px" }}
+          onSubmit={handleFormSubmission}
+        >
+          <input
+            type="text"
+            name="message"
+            placeholder="Enter your message"
+            style={{padding: "5px"}}
+          />
+          <button type="submit">Submit</button>
+        </form>
     </div>
     );
 };
