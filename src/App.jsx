@@ -1,31 +1,35 @@
-import  Button from "./Button";
-const handleClick = () => console.log("Button clicked!");
-let count = 0;
-const handleIncrement = () => {
-  count++;
-  console.log(count);
-}
 const App = () => {
-  const changeToGreen = () => {
-    document.body.style.backgroundColor = "lightGreen";
-  }
-  const changeToBlue = () => {
-    document.body.style.backgroundColor = "lightBlue";
-  }
+  const handleParentClick = () => console.log("Parent clicked!");
+  const handleChildClick = (e) => {
+    e.stopPropagation();
+    console.log("Child clicked!");
+  };
+  
   return (
-    <>
-      <Button onClick={()=>console.log("Button Clicked!")}>
-        Log Message
-      </Button>
+    <div
+      onClick={handleParentClick}
+      style={{
+        padding: "30px",
+        background: "lightgreen",
+        textAlign: "center",
+      }}
+    >
 
-      <Button onClick={changeToGreen}>
-        Change to Green
-      </Button>
-
-      <Button onClick={changeToBlue}>
-        Change to Blue
-      </Button>
-    </>
+      Parent
+      <div
+        onClick={handleChildClick}
+        style={{
+          marginTop: "20px",
+          padding: "20px",
+          background: "lightblue",
+          textAlign: "center",
+        }}
+      >   
+        Child
+      </div>
+    </div>
     );
-}
- export default App;
+};
+
+
+export default App;
