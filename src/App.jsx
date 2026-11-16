@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import  Button from "./Button";
 const handleClick = () => console.log("Button clicked!");
 let count = 0;
 const handleIncrement = () => {
@@ -6,14 +6,25 @@ const handleIncrement = () => {
   console.log(count);
 }
 const App = () => {
+  const changeToGreen = () => {
+    document.body.style.backgroundColor = "lightGreen";
+  }
+  const changeToBlue = () => {
+    document.body.style.backgroundColor = "lightBlue";
+  }
   return (
     <>
-      <button onClick={handleClick}>
-          Click me
-      </button>
-      <button onClick={handleIncrement}>
-          Increment
-      </button>
+      <Button onClick={()=>console.log("Button Clicked!")}>
+        Log Message
+      </Button>
+
+      <Button onClick={changeToGreen}>
+        Change to Green
+      </Button>
+
+      <Button onClick={changeToBlue}>
+        Change to Blue
+      </Button>
     </>
     );
 }
