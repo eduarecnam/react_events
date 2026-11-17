@@ -1,38 +1,78 @@
 import { useState } from "react";
+import { produce } from "immer";
 
 const App = () => {
   // state for the counter
-  const [count, setCount] = useState(0);
-  //updating state by passing a value (may cause stale state issues)
-  const incrementWithValue = () => {
-    setCount(count + 1);
-    // may not work as expected due to stale state
-    setCount(count + 1); 
-  }
-  //Updatingg state by passing a function (always gets the latest state)
-  const incrementWithFunction = () => {
-    setCount(prev => prev + 1);
-    //correctly updates twice
-    setCount(prev => prev + 1);
-    //will get the old state of value of count as this value is captured when the function is defined
-    console.log(count);
-  }
-  return (
-      <div style={{textAlign: "center", marginTop: "50px"}}>
-        <h1>Counter: {count}</h1>
-        <button
-          onClick={incrementWithValue}
-          style={{ margin: "5px", padding: "10px"}}
-        >
-          Increment (using value)
-        </button>
+  const [user, setUser] = useState({
+    name: "Alice",
+    details: {
+      age: 25,
+      location: "New York",
+    }
+  });
+ 
+  //Incorrect: Mutatin the existing state directly
+  const updateNameIncorrect = () =>{
+    //Directly modifying state (WRONGG)
+    user.name = "Bob";
+    /* Setting the same object reference, it won't work as React state updates depends
+    on detecting new object references. 
+    */
+    setUser(user);
+  };
 
-        <button
-          onClick={incrementWithFunction}
-          style={{ margin: "5px", padding: "10px"}}
-        >
-          Increment (using function)
-        </button>
+  //Correctly updating the object state (without mutation)
+  const updateName = () => {
+    //Creating a new object copying the existing user detaisl
+    setUser({ ...user, name:"Bob"})
+  };
+
+  //Updating the nested details object
+  const updateLocation = () => {
+    setUser({
+      ...user,
+      //creating a new details object
+      details:{
+        //Copy existing details with the spread syntax
+        ...user.details,
+        location: "San Francisco",
+      },
+    })
+  };
+
+//using immer to simplify updates
+const updateAgeWithImmer = () => {
+  setUser(
+    produce(user, (draft) => {
+      //immer allows direct updates without breaking immutability
+      draft.details.age = 30;
+    })
+  );
+};
+
+  return (
+      <div style={{padding: "20px", fontFamily: "Arial"}}>
+        <button onClick={updateName}> Change Name to Bob</button>
+        <button onClick={updateLocation}> Change location to San Francisco</button>
+        <button onClick={updateAgeWithImmer}> Change Age to 30 (With Immer)</button>
+        <p>
+            <strong>
+              Name:
+            </strong>
+            {user.name}
+        </p>
+        <p>
+            <strong>
+              Age:
+            </strong>
+            {user.details.age}
+        </p>
+        <p>
+            <strong>
+              Location:
+            </strong>
+            {user.details.location}
+        </p>
       </div>
     );
 };
